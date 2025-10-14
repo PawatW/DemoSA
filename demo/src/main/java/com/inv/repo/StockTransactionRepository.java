@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public class StockTransactionRepository {
 
@@ -21,5 +23,8 @@ public class StockTransactionRepository {
                 transaction.getStaffId(),
                 transaction.getReference()
         );
+    }
+    public List<StockTransaction> findAll() {
+        return jdbcTemplate.query("SELECT * FROM StockTransaction ORDER BY transaction_date DESC", this::mapRow);
     }
 }

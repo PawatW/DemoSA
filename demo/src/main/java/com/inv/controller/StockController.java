@@ -1,6 +1,7 @@
 package com.inv.controller;
 
 import com.inv.model.Request;
+import com.inv.model.StockTransaction;
 import com.inv.service.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,11 @@ public class StockController {
                 request.getSupplierId(),
                 request.getNote()
         );
+    }
+
+    @GetMapping("/transactions")
+    public List<StockTransaction> getAllTransactions() {
+        return stockService.getAllTransactions();
     }
     // --- Fulfillment / Stock-Out (ของใหม่) ---
     @GetMapping("/approved-requests")

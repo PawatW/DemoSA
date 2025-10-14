@@ -27,6 +27,10 @@ public class RequestService {
         return requestId;
     }
 
+    public List<Request> getAllRequests() {
+        return requestRepository.findAll();
+    }
+
     public List<Request> getPendingRequests() {
         return requestRepository.findPendingRequests();
     }

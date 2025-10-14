@@ -85,6 +85,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/requests/ready-to-close").hasRole("warehouse")
                         .requestMatchers(HttpMethod.PUT, "/requests/{id}/close").hasRole("warehouse")
 
+                        // เพิ่ม: Rules สำหรับการปิด Order โดย Sales
+                        .requestMatchers(HttpMethod.GET, "/orders/ready-to-close").hasRole("sales")
+                        .requestMatchers(HttpMethod.PUT, "/orders/{orderId}/close").hasRole("sales")
+
+                        // เพิ่ม: Rules สำหรับ Endpoint ใหม่ (ให้ Admin เข้าถึงได้)
+                        .requestMatchers(HttpMethod.GET, "/staff", "/requests", "/orders", "/stock/transactions").hasRole("admin")
+                        
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

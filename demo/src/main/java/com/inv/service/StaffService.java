@@ -38,6 +38,9 @@ public class StaffService {
         staff.setPassword(null); // ไม่ควรส่ง password hash กลับไป
         return staff;
     }
+    public List<Staff> getAllStaff() {
+        return userRepository.findAll();
+    }
 
     // อาจเพิ่มฟังก์ชันอื่นๆ สำหรับ Admin ในอนาคต
     // public List<Staff> getAllStaff() { ... }

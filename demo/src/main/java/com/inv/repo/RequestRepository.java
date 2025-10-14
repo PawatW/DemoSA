@@ -66,6 +66,10 @@ public class RequestRepository {
         );
     }
 
+    public List<Request> findAll() {
+        return jdbcTemplate.query("SELECT * FROM Request ORDER BY request_date DESC", this::mapRow);
+    }
+
     public List<Request> findPendingRequests() {
         // โค้ดเดิมถูกต้องแล้ว (ครอบคลุมทั้ง Pending และ Awaiting Approval)
         return jdbcTemplate.query(
@@ -134,7 +138,7 @@ public class RequestRepository {
     // เพิ่ม: Method ค้นหา Request ที่เบิกของครบแล้วและพร้อมที่จะปิด
     public List<Request> findReadyToCloseRequests() {
         String sql = "SELECT * FROM Request r " +
-                "WHERE r.status = 'Approved' " +
+                "WHERE r.status = 'Pending' " +
                 "AND NOT EXISTS (SELECT 1 FROM RequestItem ri WHERE ri.request_id = r.request_id AND ri.remaining_qty > 0)";
         return jdbcTemplate.query(sql, this::mapRow);
     }

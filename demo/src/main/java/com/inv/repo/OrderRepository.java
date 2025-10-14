@@ -62,6 +62,10 @@ public class OrderRepository {
         );
     }
 
+    public List<Order> findAll() {
+        return jdbcTemplate.query("SELECT * FROM \"Order\" ORDER BY order_date DESC", this::mapRow);
+    }
+
     public List<Order> findConfirmedOrders() {
         // แก้ไข: เปลี่ยนจาก orders เป็น "Order"
         return jdbcTemplate.query("SELECT * FROM \"Order\" WHERE status = 'Confirmed'", this::mapRow);
@@ -94,5 +98,25 @@ public class OrderRepository {
     // เพิ่ม: อัปเดตสถานะของ Order
     public void updateOrderStatus(int orderId, String status) {
         jdbcTemplate.update("UPDATE \"Order\" SET status = ? WHERE order_id = ?", status, orderId);
+    }
+
+    // เพิ่ม: ค้นหา Order ที่พร้อมปิด (ตาม Usecase)
+    public List<Order> findOrdersReadyToClose() {
+        String sql = "SELECT o.order_id, o.order_date, o.status FROM \"Order\" AS o " +
+                "WHERE o.status = 'Confirmed' " + // แก้จาก Pending เป็น Confirmed ตาม Precondition
+                "AND NOT EXISTS (SELECT 1 FROM OrderItem AS oi WHERE oi.order_id = o.order_id AND oi.remaining_qty > 0)";
+        return jdbcTemplate.query(sql, this::mapRow);
+    }
+
+    // เพิ่ม: ตรวจสอบว่ามี Request ที่ยังไม่ปิดของ Order นี้หรือไม่ (ตาม Usecase)
+    public boolean hasPendingRequests(int orderId) {
+        String sql = "SELECT COUNT(*) FROM Request WHERE order_id = ? AND status != 'Closed'";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, orderId);
+        return count != null && count > 0;
+    }
+
+    // แก้ไข: updateOrderStatus เดิมให้เป็นเมธอดสำหรับปิด Order (ตาม Usecase)
+    public void closeOrder(int orderId, int staffId) {
+        jdbcTemplate.update("UPDATE \"Order\" SET status = 'Closed', closed_date = NOW(), closed_by = ? WHERE order_id = ?", staffId, orderId);
     }
 }

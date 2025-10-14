@@ -48,6 +48,10 @@ public class StockService {
 
         stockTransactionRepository.save(transaction);
     }
+
+    public List<StockTransaction> getAllTransactions() {
+        return stockTransactionRepository.findAll();
+    }
     public List<Request> getApprovedRequests() {
         return requestRepository.findApprovedRequests();
     }
@@ -101,9 +105,7 @@ public class StockService {
         if (request != null && request.getOrderId() != null) {
             orderRepository.updateOrderItemFulfillment(request.getOrderId(), productId, fulfillQty);
 
-            if (orderRepository.areAllOrderItemsFulfilled(request.getOrderId())) {
-                orderRepository.updateOrderStatus(request.getOrderId(), "Completed");
-            }
         }
     }
+
 }

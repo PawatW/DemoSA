@@ -25,6 +25,11 @@ public class RequestController {
         return requestService.createRequest(reqRequest.getRequest(), reqRequest.getItems());
     }
 
+    @GetMapping
+    public List<Request> getAllRequests() {
+        return requestService.getAllRequests();
+    }
+
     @GetMapping("/pending")
     public List<Request> getPendingRequests() {
         return requestService.getPendingRequests();
