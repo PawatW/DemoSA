@@ -17,9 +17,16 @@ public class StockController {
     @Autowired
     private StockService stockService;
 
+
+    @GetMapping("/transactions")
+    public List<StockTransaction> getAllTransactions() {
+        return stockService.getAllTransactions();
+    }
+
     @PostMapping("/in")
     public void addStockIn(@RequestBody StockInRequest request, Principal principal) {
-        int staffId = Integer.parseInt(principal.getName());
+        // แก้ไข: ไม่ต้องแปลงเป็น int แล้ว
+        String staffId = principal.getName();
 
         stockService.addStockIn(
                 request.getProductId(),
@@ -30,11 +37,7 @@ public class StockController {
         );
     }
 
-    @GetMapping("/transactions")
-    public List<StockTransaction> getAllTransactions() {
-        return stockService.getAllTransactions();
-    }
-    // --- Fulfillment / Stock-Out (ของใหม่) ---
+    // --- Fulfillment / Stock-Out ---
     @GetMapping("/approved-requests")
     public List<Request> getApprovedRequests() {
         return stockService.getApprovedRequests();
@@ -42,37 +45,37 @@ public class StockController {
 
     @PostMapping("/fulfill")
     public void fulfillItem(@RequestBody FulfillRequest request, Principal principal) {
-        int warehouseStaffId = Integer.parseInt(principal.getName());
+        // แก้ไข: ไม่ต้องแปลงเป็น int แล้ว
+        String warehouseStaffId = principal.getName();
         stockService.fulfillItem(request.getRequestItemId(), request.getFulfillQty(), warehouseStaffId);
     }
 
     // Inner class สำหรับรับ JSON request ของการเบิกของ
     public static class FulfillRequest {
-        private int requestItemId;
+        private String requestItemId; // แก้เป็น String
         private int fulfillQty;
 
         // Getters and Setters
-        public int getRequestItemId() { return requestItemId; }
-        public void setRequestItemId(int requestItemId) { this.requestItemId = requestItemId; }
+        public String getRequestItemId() { return requestItemId; }
+        public void setRequestItemId(String requestItemId) { this.requestItemId = requestItemId; }
         public int getFulfillQty() { return fulfillQty; }
         public void setFulfillQty(int fulfillQty) { this.fulfillQty = fulfillQty; }
     }
 
-
     // Inner class สำหรับรับ JSON request
     public static class StockInRequest {
-        private int productId;
+        private String productId;   // แก้เป็น String
         private int quantity;
-        private int supplierId;
+        private String supplierId; // แก้เป็น String
         private String note;
 
         // Getters and Setters
-        public int getProductId() { return productId; }
-        public void setProductId(int productId) { this.productId = productId; }
+        public String getProductId() { return productId; }
+        public void setProductId(String productId) { this.productId = productId; }
         public int getQuantity() { return quantity; }
         public void setQuantity(int quantity) { this.quantity = quantity; }
-        public int getSupplierId() { return supplierId; }
-        public void setSupplierId(int supplierId) { this.supplierId = supplierId; }
+        public String getSupplierId() { return supplierId; }
+        public void setSupplierId(String supplierId) { this.supplierId = supplierId; }
         public String getNote() { return note; }
         public void setNote(String note) { this.note = note; }
     }

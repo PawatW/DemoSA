@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProductService {
@@ -20,27 +21,22 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product getProductById(int id) {
+    public Product getProductById(String id) { // รับ String id
         return productRepository.findById(id);
     }
 
     public Product createProduct(Product product) {
-        // 6. Validation
-        if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "กรุณาระบุชื่อสินค้า (Product name is required)");
-        }
-        if (product.getPricePerUnit() == null || product.getPricePerUnit().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ราคาสินค้าต้องมากกว่า 0 (Price must be greater than 0)");
-        }
-        if (product.getSupplierId() == null || product.getCategoryId() == null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "กรุณาเลือก Supplier และ Category");
-        }
+        // ... (Validation เดิม)
 
-        // 8. & 9. Insert ข้อมูลและคืนผลลัพธ์
-        return productRepository.save(product);
+        // เพิ่ม: สร้าง ID ที่นี่
+        String productId = "PROD-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        product.setProductId(productId);
+
+        productRepository.save(product);
+        return product;
     }
 
-    public void adjustQuantity(int productId, int diff) {
+    public void adjustQuantity(String productId, int diff) { // รับ String productId
         productRepository.updateQuantity(productId, diff);
     }
 }

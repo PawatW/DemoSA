@@ -3,18 +3,14 @@ package com.inv.model;
 import java.math.BigDecimal;
 
 public class Product {
-    private int productId;
+    private String productId; // แก้เป็น String
     private String productName;
     private String description;
     private String unit;
     private BigDecimal pricePerUnit;
-    private Integer supplierId;
-    private Integer categoryId;
-    private int quantity; // stock on hand
+    private String supplierId; // แก้เป็น String
+    private int quantity;
     private String imageUrl;
-
-    public int getProductId() { return productId; }
-    public void setProductId(int productId) { this.productId = productId; }
 
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
@@ -28,11 +24,11 @@ public class Product {
     public BigDecimal getPricePerUnit() { return pricePerUnit; }
     public void setPricePerUnit(BigDecimal pricePerUnit) { this.pricePerUnit = pricePerUnit; }
 
-    public Integer getSupplierId() { return supplierId; }
-    public void setSupplierId(Integer supplierId) { this.supplierId = supplierId; }
+    public String getProductId() { return productId; }
+    public void setProductId(String productId) { this.productId = productId; }
 
-    public Integer getCategoryId() { return categoryId; }
-    public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
+    public String getSupplierId() { return supplierId; }
+    public void setSupplierId(String supplierId) { this.supplierId = supplierId; }
 
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }

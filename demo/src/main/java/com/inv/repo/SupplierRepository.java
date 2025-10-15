@@ -17,10 +17,10 @@ public class SupplierRepository {
 
     private Supplier mapRow(ResultSet rs, int rowNum) throws SQLException {
         Supplier s = new Supplier();
-        s.setSupplierId(rs.getInt("supplier_id"));
+        s.setSupplierId(rs.getString("supplier_id")); // rs.getString
         s.setSupplierName(rs.getString("supplier_name"));
-        s.setAddress(rs.getString("address"));
-        s.setPhone(rs.getString("phone"));
+        s.setAddress(rs.getString("address")); // แก้ไข: schema ใหม่ใช้ address
+        s.setPhone(rs.getString("phone"));     // แก้ไข: schema ใหม่ใช้ phone
         s.setEmail(rs.getString("email"));
         return s;
     }
@@ -29,7 +29,7 @@ public class SupplierRepository {
         return jdbcTemplate.query("SELECT * FROM Supplier", this::mapRow);
     }
 
-    public Supplier findById(int id) {
+    public Supplier findById(String id) { // รับ String id
         List<Supplier> list = jdbcTemplate.query(
                 "SELECT * FROM Supplier WHERE supplier_id = ?",
                 this::mapRow,
@@ -43,14 +43,16 @@ public class SupplierRepository {
         return list.isEmpty() ? null : list.get(0);
     }
 
-    // แก้ไข: ให้ method save คืนค่าเป็น Supplier ที่สร้างเสร็จแล้ว
-    public Supplier save(Supplier s) {
-        String sql = "INSERT INTO Supplier(supplier_name, address, phone, email) VALUES (?,?,?,?) RETURNING *";
-        return jdbcTemplate.queryForObject(
+    // แก้ไข: save ไม่ return ค่าแล้ว และเพิ่ม supplier_id ในการ insert
+    public void save(Supplier s) {
+        String sql = "INSERT INTO Supplier(supplier_id, supplier_name, address, phone, email) VALUES (?,?,?,?,?)";
+        jdbcTemplate.update(
                 sql,
-                this::mapRow,
-                s.getSupplierName(), s.getAddress(), s.getPhone(), s.getEmail()
+                s.getSupplierId(),
+                s.getSupplierName(),
+                s.getAddress(),
+                s.getPhone(),
+                s.getEmail()
         );
     }
-
 }

@@ -23,19 +23,19 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable int id) {
+    public Product getProductById(@PathVariable String id) { // รับ String id
         return productService.getProductById(id);
+    }
+
+    @PutMapping("/{id}/adjust")
+    public void adjustStock(@PathVariable String id, @RequestParam int diff) { // รับ String id
+        productService.adjustQuantity(id, diff);
     }
 
     @PostMapping
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product newProduct = productService.createProduct(product);
         return ResponseEntity.ok(newProduct);
-    }
-
-    @PutMapping("/{id}/adjust")
-    public void adjustStock(@PathVariable int id, @RequestParam int diff) {
-        productService.adjustQuantity(id, diff);
     }
 
 //    @PostMapping("/products/{id}/image")

@@ -17,7 +17,7 @@ public class CustomerRepository {
 
     private Customer mapRow(ResultSet rs, int rowNum) throws SQLException {
         Customer c = new Customer();
-        c.setCustomerId(rs.getInt("customer_id"));
+        c.setCustomerId(rs.getString("customer_id")); // rs.getString
         c.setCustomerName(rs.getString("customer_name"));
         c.setAddress(rs.getString("address"));
         c.setPhone(rs.getString("phone"));
@@ -29,7 +29,7 @@ public class CustomerRepository {
         return jdbcTemplate.query("SELECT * FROM Customer", this::mapRow);
     }
 
-    public Customer findById(int id) {
+    public Customer findById(String id) { // รับ String id
         List<Customer> list = jdbcTemplate.query(
                 "SELECT * FROM Customer WHERE customer_id = ?",
                 this::mapRow,
@@ -43,19 +43,17 @@ public class CustomerRepository {
         return list.isEmpty() ? null : list.get(0);
     }
 
-    // เพิ่ม: Method สำหรับหาลูกค้าด้วยอีเมล
     public Customer findByEmail(String email) {
         List<Customer> list = jdbcTemplate.query("SELECT * FROM Customer WHERE email = ?", this::mapRow, email);
         return list.isEmpty() ? null : list.get(0);
     }
 
-    // แก้ไข: ให้ method save คืนค่าเป็น Customer ที่สร้างเสร็จแล้ว
-    public Customer save(Customer c) {
-        // ใช้ RETURNING * เพื่อดึงข้อมูลทั้งหมดของแถวที่เพิ่งเพิ่มเข้าไป
-        String sql = "INSERT INTO Customer(customer_name, address, phone, email) VALUES (?,?,?,?) RETURNING *";
-        return jdbcTemplate.queryForObject(
+    // แก้ไข: save ไม่ return ค่าแล้ว และเพิ่ม customer_id ในการ insert
+    public void save(Customer c) {
+        String sql = "INSERT INTO Customer(customer_id, customer_name, address, phone, email) VALUES (?,?,?,?,?)";
+        jdbcTemplate.update(
                 sql,
-                this::mapRow,
+                c.getCustomerId(),
                 c.getCustomerName(), c.getAddress(), c.getPhone(), c.getEmail()
         );
     }

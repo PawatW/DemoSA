@@ -21,7 +21,7 @@ public class CustomerController {
     }
 
     @GetMapping("/{id}")
-    public Customer getCustomerById(@PathVariable int id) {
+    public Customer getCustomerById(@PathVariable String id) { // รับ String id
         return customerService.getCustomerById(id);
     }
 

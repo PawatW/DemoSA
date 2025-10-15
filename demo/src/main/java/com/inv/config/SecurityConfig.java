@@ -91,7 +91,7 @@ public class SecurityConfig {
 
                         // เพิ่ม: Rules สำหรับ Endpoint ใหม่ (ให้ Admin เข้าถึงได้)
                         .requestMatchers(HttpMethod.GET, "/staff", "/requests", "/orders", "/stock/transactions").hasRole("admin")
-                        
+
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

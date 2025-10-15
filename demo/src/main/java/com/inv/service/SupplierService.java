@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID; // Import เพิ่ม
 
 @Service
 public class SupplierService {
@@ -19,7 +20,7 @@ public class SupplierService {
         return supplierRepository.findAll();
     }
 
-    public Supplier getSupplierById(int id) {
+    public Supplier getSupplierById(String id) { // รับ String id
         return supplierRepository.findById(id);
     }
 
@@ -29,14 +30,17 @@ public class SupplierService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "กรุณาระบุชื่อ Supplier (Supplier name is required)");
         }
 
-        // ตรวจสอบอีเมลซ้ำ (ถ้ามี)
         if (supplier.getEmail() != null && !supplier.getEmail().trim().isEmpty()) {
             if (supplierRepository.findByEmail(supplier.getEmail()) != null) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, "อีเมลนี้มีในระบบแล้ว (Email already exists)");
             }
         }
 
-        // 6. & 7. Insert ข้อมูลและคืนผลลัพธ์
-        return supplierRepository.save(supplier);
+        // เพิ่ม: สร้าง ID ที่นี่
+        String supplierId = "SUP-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        supplier.setSupplierId(supplierId);
+
+        supplierRepository.save(supplier);
+        return supplier;
     }
 }

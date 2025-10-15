@@ -1,22 +1,24 @@
 package com.inv.model;
 
 public class RequestItem {
-    private int requestItemId;
-    private int requestId;
-    private int productId;
-    private int quantity;       // requested
-    private int fulfilledQty;   // default 0
-    private int remainingQty;   // default = quantity at create
+    private String requestItemId; // แก้เป็น String
+    private String requestId;     // แก้เป็น String
+    private String productId;     // แก้เป็น String
+    private int quantity;
+    private int fulfilledQty;
+    private int remainingQty;
 
-    public int getRequestItemId() { return requestItemId; }
-    public void setRequestItemId(int requestItemId) { this.requestItemId = requestItemId; }
+    // --- Getters and Setters (ปรับ Type ของ ID) ---
+    public String getRequestItemId() { return requestItemId; }
+    public void setRequestItemId(String requestItemId) { this.requestItemId = requestItemId; }
 
-    public int getRequestId() { return requestId; }
-    public void setRequestId(int requestId) { this.requestId = requestId; }
+    public String getRequestId() { return requestId; }
+    public void setRequestId(String requestId) { this.requestId = requestId; }
 
-    public int getProductId() { return productId; }
-    public void setProductId(int productId) { this.productId = productId; }
+    public String getProductId() { return productId; }
+    public void setProductId(String productId) { this.productId = productId; }
 
+    //... (Getters and Setters ที่เหลือ)
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
 

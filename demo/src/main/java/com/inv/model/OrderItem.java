@@ -3,24 +3,26 @@ package com.inv.model;
 import java.math.BigDecimal;
 
 public class OrderItem {
-    private int orderItemId;
-    private int orderId;
-    private int productId;
+    private String orderItemId; // แก้เป็น String
+    private String orderId;     // แก้เป็น String
+    private String productId;   // แก้เป็น String
     private int quantity;
     private BigDecimal unitPrice;
     private BigDecimal lineTotal;
     private int fulfilledQty;
     private int remainingQty;
 
-    public int getOrderItemId() { return orderItemId; }
-    public void setOrderItemId(int orderItemId) { this.orderItemId = orderItemId; }
+    // --- Getters and Setters (ปรับ Type ของ ID) ---
+    public String getOrderItemId() { return orderItemId; }
+    public void setOrderItemId(String orderItemId) { this.orderItemId = orderItemId; }
 
-    public int getOrderId() { return orderId; }
-    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public String getOrderId() { return orderId; }
+    public void setOrderId(String orderId) { this.orderId = orderId; }
 
-    public int getProductId() { return productId; }
-    public void setProductId(int productId) { this.productId = productId; }
+    public String getProductId() { return productId; }
+    public void setProductId(String productId) { this.productId = productId; }
 
+    //... (Getters and Setters ที่เหลือ)
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
 

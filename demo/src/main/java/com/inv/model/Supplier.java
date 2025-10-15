@@ -1,14 +1,19 @@
 package com.inv.model;
 
 public class Supplier {
-    private int supplierId;
+    private String supplierId;
     private String supplierName;
     private String address;
     private String phone;
     private String email;
 
-    public int getSupplierId() { return supplierId; }
-    public void setSupplierId(int supplierId) { this.supplierId = supplierId; }
+    public void setSupplierId(String supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public String getSupplierId() {
+        return supplierId;
+    }
 
     public String getSupplierName() { return supplierName; }
     public void setSupplierName(String supplierName) { this.supplierName = supplierName; }

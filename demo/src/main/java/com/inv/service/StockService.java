@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -23,6 +24,7 @@ public class StockService {
     @Autowired
     private ProductRepository productRepository;
 
+
     @Autowired
     private StockTransactionRepository stockTransactionRepository;
     @Autowired
@@ -30,35 +32,35 @@ public class StockService {
     @Autowired
     private OrderRepository orderRepository;
 
-    @Transactional // สำคัญมาก: ทำให้มั่นใจว่าถ้าเกิด Error ระหว่างทาง, การทำงานทั้งหมดจะถูกยกเลิก
-    public void addStockIn(int productId, int quantity, int staffId, int supplierId, String note) {
+    @Transactional
+    // แก้ไข: เปลี่ยน Type ของ ID ทั้งหมดเป็น String
+    public void addStockIn(String productId, int quantity, String staffId, String supplierId, String note) {
         // 1. Update Stock Quantity
         productRepository.updateQuantity(productId, quantity);
 
         // 2. Record Stock Transaction
         StockTransaction transaction = new StockTransaction();
+        String transactionId = "ST-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        transaction.setTransactionId(transactionId);
         transaction.setType("IN");
         transaction.setProductId(productId);
         transaction.setQuantity(quantity);
         transaction.setStaffId(staffId);
 
         // สร้าง reference note ตาม use case
-        String referenceNote = String.format("Stock-In from Supplier ID %d. Note: %s", supplierId, note);
-        transaction.setReference(referenceNote);
+        String referenceNote = String.format("Stock-In from Supplier ID %s. Note: %s", supplierId, note);
+        transaction.setDescription(referenceNote); // แก้ไข: ใช้ setDescription ตาม schema ใหม่
 
         stockTransactionRepository.save(transaction);
     }
 
-    public List<StockTransaction> getAllTransactions() {
-        return stockTransactionRepository.findAll();
-    }
     public List<Request> getApprovedRequests() {
         return requestRepository.findApprovedRequests();
     }
 
-    // เพิ่ม: Method หลักสำหรับกระบวนการเบิกของ
     @Transactional
-    public void fulfillItem(int requestItemId, int fulfillQty, int warehouseStaffId) {
+    // แก้ไข: เปลี่ยน Type ของ ID ทั้งหมดเป็น String
+    public void fulfillItem(String requestItemId, int fulfillQty, String warehouseStaffId) {
         // 9. Validation
         if (fulfillQty <= 0) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "จำนวนที่เบิกต้องมากกว่า 0");
@@ -84,19 +86,21 @@ public class StockService {
 
         // ③ Insert ลง StockTransaction (OUT)
         StockTransaction transaction = new StockTransaction();
+        String transactionId = "ST-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        transaction.setTransactionId(transactionId);
         transaction.setType("OUT");
         transaction.setProductId(item.getProductId());
         transaction.setQuantity(fulfillQty);
         transaction.setStaffId(warehouseStaffId);
-        transaction.setReference("Fulfill Request ID " + item.getRequestId());
+        transaction.setDescription("Fulfill Request ID " + item.getRequestId());
         stockTransactionRepository.save(transaction);
 
         // 14. & 16. Post-Fulfillment Actions
         checkAndUpdateRequestAndOrderStatus(item.getRequestId(), item.getProductId(), fulfillQty);
     }
 
-    // เพิ่ม: Method ช่วยสำหรับตรวจสอบและอัปเดตสถานะ
-    private void checkAndUpdateRequestAndOrderStatus(int requestId, int productId, int fulfillQty) {
+    // แก้ไข: เปลี่ยน Type ของ ID ทั้งหมดเป็น String
+    private void checkAndUpdateRequestAndOrderStatus(String requestId, String productId, int fulfillQty) {
         if (requestRepository.areAllItemsFulfilled(requestId)) {
             requestRepository.updateRequestStatus(requestId, "Closed");
         }
@@ -104,8 +108,10 @@ public class StockService {
         Request request = requestRepository.findById(requestId);
         if (request != null && request.getOrderId() != null) {
             orderRepository.updateOrderItemFulfillment(request.getOrderId(), productId, fulfillQty);
-
         }
+    }
+    public List<StockTransaction> getAllTransactions() {
+        return stockTransactionRepository.findAll();
     }
 
 }

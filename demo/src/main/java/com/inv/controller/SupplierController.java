@@ -21,11 +21,10 @@ public class SupplierController {
     }
 
     @GetMapping("/{id}")
-    public Supplier getSupplierById(@PathVariable int id) {
+    public Supplier getSupplierById(@PathVariable String id) { // รับ String id
         return supplierService.getSupplierById(id);
     }
 
-    // แก้ไข: เรียกใช้ createSupplier และคืนค่าเป็น ResponseEntity
     @PostMapping
     public ResponseEntity<Supplier> createSupplier(@RequestBody Supplier supplier) {
         Supplier newSupplier = supplierService.createSupplier(supplier);

@@ -1,16 +1,17 @@
 package com.inv.model;
 
 public class Staff {
-    private int staffId;
+    private String staffId; // แก้เป็น String
     private String staffName;
-    private String role;       // admin, sales, technician, foreman, warehouse, purchasing
+    private String role;
     private String email;
-    private String password;   // demo only; โปรดใช้ hash ในโปรดักชัน
+    private String password;
     private String phone;
     private boolean active;
 
-    public int getStaffId() { return staffId; }
-    public void setStaffId(int staffId) { this.staffId = staffId; }
+    // --- Getters and Setters (ปรับ Type ของ ID) ---
+    public String getStaffId() { return staffId; }
+    public void setStaffId(String staffId) { this.staffId = staffId; }
 
     public String getStaffName() { return staffName; }
     public void setStaffName(String staffName) { this.staffName = staffName; }

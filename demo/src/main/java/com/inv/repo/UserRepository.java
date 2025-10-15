@@ -17,11 +17,12 @@ public class UserRepository {
 
     private Staff mapRow(ResultSet rs, int rowNum) throws SQLException {
         Staff s = new Staff();
-        s.setStaffId(rs.getInt("staff_id"));
+        s.setStaffId(rs.getString("staff_id")); // rs.getString
         s.setStaffName(rs.getString("staff_name"));
         s.setRole(rs.getString("role"));
         s.setEmail(rs.getString("email"));
         s.setPassword(rs.getString("password"));
+        s.setPhone(rs.getString("phone")); // เพิ่ม phone
         s.setActive(rs.getBoolean("active"));
         return s;
     }
@@ -41,7 +42,8 @@ public class UserRepository {
 
     public void save(Staff staff) {
         jdbcTemplate.update(
-                "INSERT INTO Staff(staff_name, role, phone, email, password, active) VALUES (?,?,?,?,?,?)",
+                "INSERT INTO Staff(staff_id, staff_name, role, phone, email, password, active) VALUES (?,?,?,?,?,?,?)",
+                staff.getStaffId(), // เพิ่ม staff_id
                 staff.getStaffName(), staff.getRole(), staff.getPhone(), staff.getEmail(),
                 staff.getPassword(), staff.isActive()
         );
