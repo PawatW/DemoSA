@@ -54,43 +54,44 @@ public class SecurityConfig {
                         // Public endpoints
                         .requestMatchers("/register", "/login", "/test").permitAll()
 
+                        // แก้ไข: ทำให้ Role เป็นตัวพิมพ์ใหญ่ทั้งหมด
                         // Technician endpoints
-                        .requestMatchers(HttpMethod.POST, "/requests").hasRole("Technician")
+                        .requestMatchers(HttpMethod.POST, "/requests").hasRole("TECHNICIAN")
 
                         // Foreman endpoints
-                        .requestMatchers(HttpMethod.GET, "/requests/pending").hasRole("Foreman")
-                        .requestMatchers(HttpMethod.PUT, "/requests/{id}/approve").hasRole("Foreman")
-                        .requestMatchers(HttpMethod.PUT, "/requests/{id}/reject").hasRole("Foreman")
+                        .requestMatchers(HttpMethod.GET, "/requests/pending").hasRole("FOREMAN")
+                        .requestMatchers(HttpMethod.PUT, "/requests/{id}/approve").hasRole("FOREMAN")
+                        .requestMatchers(HttpMethod.PUT, "/requests/{id}/reject").hasRole("FOREMAN")
 
                         // Authenticated endpoints (สำหรับ role อื่นๆ หรือ role ร่วม)
-                        .requestMatchers(HttpMethod.GET, "/orders/confirmed").hasAnyRole("Technician", "Admin")
-                        .requestMatchers(HttpMethod.GET, "/orders/{orderId}/items").hasAnyRole("Technician", "Admin", "Foreman")
-                        .requestMatchers(HttpMethod.GET, "/requests/{requestId}/items").hasAnyRole("Technician", "Foreman", "Admin")
+                        .requestMatchers(HttpMethod.GET, "/orders/confirmed").hasAnyRole("TECHNICIAN", "ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/orders/{orderId}/items").hasAnyRole("TECHNICIAN", "ADMIN", "FOREMAN")
+                        .requestMatchers(HttpMethod.GET, "/requests/{requestId}/items").hasAnyRole("TECHNICIAN", "FOREMAN", "ADMIN")
 
                         // เพิ่ม Rule สำหรับ Warehouse
-                        .requestMatchers(HttpMethod.POST, "/stock/in").hasRole("warehouse")
+                        .requestMatchers(HttpMethod.POST, "/stock/in").hasRole("WAREHOUSE")
 
-                        .requestMatchers(HttpMethod.POST, "/customers").hasAnyRole("admin", "sales", "technician", "foreman")
+                        .requestMatchers(HttpMethod.POST, "/customers").hasAnyRole("ADMIN", "SALES", "TECHNICIAN", "FOREMAN")
 
                         .requestMatchers(HttpMethod.POST, "/suppliers").authenticated()
 
-                        .requestMatchers("/staff/**").hasRole("admin")
+                        .requestMatchers("/staff/**").hasRole("ADMIN")
 
                         // อนุญาตให้ warehouse สร้างสินค้าได้
-                        .requestMatchers(HttpMethod.POST, "/products").hasRole("warehouse")
+                        .requestMatchers(HttpMethod.POST, "/products").hasRole("WAREHOUSE")
                         // อนุญาตให้ทุกคนที่ login แล้วดึงข้อมูล Category ได้
                         .requestMatchers(HttpMethod.GET, "/categories").authenticated()
 
                         // เพิ่ม: Rules สำหรับการปิด Request
-                        .requestMatchers(HttpMethod.GET, "/requests/ready-to-close").hasRole("warehouse")
-                        .requestMatchers(HttpMethod.PUT, "/requests/{id}/close").hasRole("warehouse")
+                        .requestMatchers(HttpMethod.GET, "/requests/ready-to-close").hasRole("WAREHOUSE")
+                        .requestMatchers(HttpMethod.PUT, "/requests/{id}/close").hasRole("WAREHOUSE")
 
                         // เพิ่ม: Rules สำหรับการปิด Order โดย Sales
-                        .requestMatchers(HttpMethod.GET, "/orders/ready-to-close").hasRole("sales")
-                        .requestMatchers(HttpMethod.PUT, "/orders/{orderId}/close").hasRole("sales")
+                        .requestMatchers(HttpMethod.GET, "/orders/ready-to-close").hasRole("SALES")
+                        .requestMatchers(HttpMethod.PUT, "/orders/{orderId}/close").hasRole("SALES")
 
                         // เพิ่ม: Rules สำหรับ Endpoint ใหม่ (ให้ Admin เข้าถึงได้)
-                        .requestMatchers(HttpMethod.GET, "/staff", "/requests", "/orders", "/stock/transactions").hasRole("admin")
+                        .requestMatchers(HttpMethod.GET, "/staff", "/requests", "/orders", "/stock/transactions").hasRole("ADMIN")
 
                         .anyRequest().authenticated()
                 )

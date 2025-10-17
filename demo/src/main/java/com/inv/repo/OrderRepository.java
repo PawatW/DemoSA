@@ -89,6 +89,7 @@ public class OrderRepository {
     }
 
     public void closeOrder(String orderId, String staffId) { // รับ String IDs
-        jdbcTemplate.update("UPDATE \"Order\" SET status = 'Closed' WHERE order_id = ?", staffId, orderId);
+        // แก้ไข: ลบ staffId ที่ไม่ได้ใช้ออกจาก argument ของ update
+        jdbcTemplate.update("UPDATE \"Order\" SET status = 'Closed' WHERE order_id = ?", orderId);
     }
 }

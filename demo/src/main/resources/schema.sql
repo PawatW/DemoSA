@@ -56,9 +56,8 @@ CREATE TABLE "Order" (
     total_amount DECIMAL(12,2) DEFAULT 0 CHECK (total_amount >= 0),
     status VARCHAR(50) DEFAULT 'Pending',
     customer_id VARCHAR(20) REFERENCES Customer(customer_id),
-    staff_id VARCHAR(20) REFERENCES Staff(staff_id),
+    staff_id VARCHAR(20) REFERENCES Staff(staff_id) -- แก้ไข: ลบ comma ที่เกินมา
 );
-
 -- ========================
 -- OrderItem
 -- ========================

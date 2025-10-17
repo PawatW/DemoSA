@@ -41,10 +41,10 @@ public class ProductRepository {
         return list.isEmpty() ? null : list.get(0);
     }
 
-    // แก้ไข: save ไม่ return ค่าแล้ว เพราะ ID ถูกสร้างจาก service
     public void save(Product p) {
+        // แก้ไข SQL ให้มี placeholder 8 ตัวให้ตรงกับจำนวนคอลัมน์
         String sql = "INSERT INTO product (product_id, product_name, description, unit, price_per_unit, supplier_id, quantity, image_url) " +
-                "VALUES (?,?,?,?,?,?,?,?,?)";
+                "VALUES (?,?,?,?,?,?,?,?)";
         jdbcTemplate.update(
                 sql,
                 p.getProductId(), // เพิ่ม productId เข้าไป
